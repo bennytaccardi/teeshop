@@ -9,33 +9,24 @@ import Testimonials from "@/components/ui/testimonials";
 import Newsletter from "@/components/ui/newsletter";
 import Footer from "@/components/ui/footer";
 import TestCodeModal from "@/components/ui/test-code-modal";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { push } = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
   const handleDarkMode = () => setDarkMode(!darkMode);
-  const handleModal = () => setShowModal(!showModal);
+  const handleModal = (showModal: boolean) => {
+    setShowModal(!showModal);
+  };
   const handleLogin = () => {
     setLoggedIn(true);
     setShowModal(false);
   };
 
-  const handleKonamiCode = (event: KeyboardEvent) => {
-    const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
-    const userInput = event.key.split("").map((key) => key.charCodeAt(0));
-    if (userInput.toString() === konamiCode.toString()) {
-      alert("You found the secret discount code! 🎉");
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKonamiCode);
-    return () => {
-      document.removeEventListener("keydown", handleKonamiCode);
-    };
-  }, []);
+  // useEffect(() => {}, []);
 
   return (
     <div
@@ -45,6 +36,7 @@ export default function Home() {
     >
       <Header
         handleModal={handleModal}
+        showModal={showModal}
         handleDarkMode={handleDarkMode}
         darkMode={darkMode}
       />
@@ -59,6 +51,7 @@ export default function Home() {
       {showModal && (
         <TestCodeModal
           handleModal={handleModal}
+          showModal={showModal}
           handleLogin={handleLogin}
           loggedIn={loggedIn}
         />
