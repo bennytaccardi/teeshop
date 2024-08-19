@@ -3,7 +3,8 @@ import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { CheckCircle, XCircle } from "lucide-react";
 
 interface TestCodeModalProps {
-  handleModal: (showModal: boolean) => void;
+  handleCodingTestModal: (showModal: boolean) => void;
+  handleBuyModal: (showModal: boolean) => void;
   showModal: boolean;
 }
 
@@ -24,30 +25,17 @@ const questions: Question[] = [
     ],
     correctAnswer: 0,
   },
-  {
-    question: "Which of the following is not a JavaScript data type?",
-    options: ["Number", "Boolean", "String", "Float"],
-    correctAnswer: 3,
-  },
-  {
-    question: "What does CSS stand for?",
-    options: [
-      "Computer Style Sheets",
-      "Cascading Style Sheets",
-      "Creative Style Sheets",
-      "Colorful Style Sheets",
-    ],
-    correctAnswer: 1,
-  },
 ];
 
 const TestCodeModal: React.FC<TestCodeModalProps> = ({
-  handleModal,
+  handleCodingTestModal,
+  handleBuyModal,
   showModal,
 }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
+  const [loose, setLoose] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
@@ -58,7 +46,6 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
       }, 1500);
       return () => clearTimeout(timer);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCorrect]);
 
   const handleAnswerClick = (answerIndex: number) => {
@@ -67,6 +54,8 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
     setIsCorrect(correct);
     if (correct) {
       setScore(score + 1);
+    } else {
+      setLoose(true);
     }
   };
 
@@ -81,22 +70,20 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
     }
   };
 
-  const handleRestartQuiz = () => {
-    setCurrentQuestion(0);
-    setScore(0);
-    setShowScore(false);
-    setSelectedAnswer(null);
-    setIsCorrect(null);
+  const handleBuyAction = () => {
+    handleBuyModal(false);
+    handleCodingTestModal(true);
   };
 
   const handleClose = () => {
-    handleModal(true);
+    handleCodingTestModal(true);
+    handleBuyModal(true);
   };
 
   return (
     <div className="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50">
-      <div className="flex items-center justify-center min-h-screen p-4">
-        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md">
+      <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg shadow-xl w-full max-w-md">
           <SignedOut>
             <SignInButton>
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full transition duration-300 ease-in-out transform hover:scale-105">
@@ -106,37 +93,39 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
           </SignedOut>
 
           <SignedIn>
-            <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-gray-800 dark:text-white">
               Coding Quiz
             </h2>
 
-            {showScore ? (
+            {loose ? (
+              <p className="text-center text-xl text-red-600">You lose</p>
+            ) : showScore ? (
               <div className="text-center">
-                <p className="text-2xl mb-4 text-gray-700 dark:text-gray-300">
+                <p className="text-xl sm:text-2xl mb-4 text-gray-700 dark:text-gray-300">
                   You scored{" "}
                   <span className="font-bold text-green-500">{score}</span> out
                   of <span className="font-bold">{questions.length}</span>
                 </p>
                 <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
-                  onClick={handleRestartQuiz}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 sm:px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+                  onClick={handleBuyAction}
                 >
-                  Restart Quiz
+                  Buy your tee
                 </button>
               </div>
             ) : (
               <div>
-                <p className="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <p className="mb-2 sm:mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
                   Question {currentQuestion + 1}/{questions.length}
                 </p>
-                <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+                <h3 className="text-lg sm:text-xl font-bold mb-4 text-gray-800 dark:text-white">
                   {questions[currentQuestion].question}
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {questions[currentQuestion].options.map((option, index) => (
                     <button
                       key={index}
-                      className={`w-full text-left p-3 rounded-md transition duration-300 ease-in-out transform hover:scale-102 ${
+                      className={`w-full text-left p-2 sm:p-3 rounded-md transition duration-300 ease-in-out transform hover:scale-102 ${
                         selectedAnswer === index
                           ? isCorrect
                             ? "bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100"
@@ -150,9 +139,9 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
                       {selectedAnswer === index && (
                         <span className="float-right">
                           {isCorrect ? (
-                            <CheckCircle className="h-6 w-6 text-green-500 animate-bounce" />
+                            <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-500 animate-bounce" />
                           ) : (
-                            <XCircle className="h-6 w-6 text-red-500 animate-bounce" />
+                            <XCircle className="h-5 w-5 sm:h-6 sm:w-6 text-red-500 animate-bounce" />
                           )}
                         </span>
                       )}

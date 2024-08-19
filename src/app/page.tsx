@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Header from "@/components/ui/header";
 import Hero from "@/components/ui/hero";
 import FeaturedProducts from "@/components/ui/featured-products";
@@ -9,40 +9,54 @@ import Testimonials from "@/components/ui/testimonials";
 import Newsletter from "@/components/ui/newsletter";
 import Footer from "@/components/ui/footer";
 import TestCodeModal from "@/components/ui/test-code-modal";
+import OrderFormModal from "@/components/ui/order-form-modal";
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showCodingTestModal, setShowCodingTestModal] = useState(false);
+  const [showBuyModal, setShowBuyModal] = useState(false);
 
   const handleDarkMode = () => setDarkMode(!darkMode);
-  const handleModal = (show: boolean) => {
-    setShowModal(!show);
-  };
+  const handleCodingTestModal = (show: boolean) =>
+    setShowCodingTestModal(!show);
+  const handleBuyModal = (show: boolean) => setShowBuyModal(!show);
 
   return (
     <div
-      className={`font-mono bg-background text-foreground ${
+      className={`font-mono bg-background text-foreground min-h-screen flex flex-col ${
         darkMode ? "dark" : ""
       }`}
     >
-      <Header
-        handleModal={handleModal}
-        showModal={showModal}
-        handleDarkMode={handleDarkMode}
-        darkMode={darkMode}
-      />
-      <main>
-        <Hero />
-        <FeaturedProducts />
-        <Features />
-        <Testimonials />
-        <Newsletter />
+      <Header handleDarkMode={handleDarkMode} darkMode={darkMode} />
+      <main className="flex-grow">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+          <Hero />
+          <FeaturedProducts
+            handleModal={handleCodingTestModal}
+            showModal={showCodingTestModal}
+          />
+          <Features />
+          <Testimonials />
+          <Newsletter />
+        </div>
       </main>
       <Footer />
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg">
-            <TestCodeModal handleModal={handleModal} showModal={showModal} />
+      {(showCodingTestModal || showBuyModal) && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+            {showCodingTestModal && (
+              <TestCodeModal
+                handleCodingTestModal={handleCodingTestModal}
+                handleBuyModal={handleBuyModal}
+                showModal={showCodingTestModal}
+              />
+            )}
+            {showBuyModal && (
+              <OrderFormModal
+                handleBuyModal={handleBuyModal}
+                showModal={showBuyModal}
+              />
+            )}
           </div>
         </div>
       )}
