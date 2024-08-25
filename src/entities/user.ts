@@ -8,4 +8,5 @@ export interface User {
   tee_size?: TeeSize;
   email?: string;
   gender?: Gender;
+  user_id?: string;
 }

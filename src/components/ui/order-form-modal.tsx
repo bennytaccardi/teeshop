@@ -12,7 +12,9 @@ interface OrderFormModalProps {
 
 interface OrderFormData {
   address: string;
+  phoneNumber: string;
   tShirtSize: TeeSize;
+  gender: Gender;
 }
 
 const OrderFormModal: React.FC<OrderFormModalProps> = ({
@@ -21,7 +23,9 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<OrderFormData>({
     address: "",
+    phoneNumber: "",
     tShirtSize: TeeSize.MEDIUM,
+    gender: Gender.NON_SPECIFIED,
   });
 
   const handleInputChange = (
@@ -40,9 +44,14 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
     const user: User = {
       address: formData.address,
       tee_size: formData.tShirtSize,
+      phone_number: formData.phoneNumber,
       gender: Gender.NON_SPECIFIED,
     };
-    await addOrderInfo(user);
+    try {
+      const insertedUser = await addOrderInfo(user);
+    } catch (e) {
+      console.error(e);
+    }
     handleBuyModal(true);
   };
 
@@ -87,6 +96,24 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
               </div>
               <div>
                 <label
+                  htmlFor="phone"
+                  className="block text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Phone number
+                </label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  placeholder="123-456-7890"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                />
+              </div>
+              <div>
+                <label
                   htmlFor="tShirtSize"
                   className="block text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300"
                 >
@@ -105,6 +132,27 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
                   <option value="M">Medium</option>
                   <option value="L">Large</option>
                   <option value="XL">X-Large</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="tShirtSize"
+                  className="block text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  required
+                >
+                  <option value="">Your gender</option>
+                  <option value="F">Female</option>
+                  <option value="M">Male</option>
+                  <option value="N">Non specified</option>
                 </select>
               </div>
               <button
