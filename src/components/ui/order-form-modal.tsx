@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { addOrderInfo } from "@/app/actions/form-order";
+import { User } from "@/entities/user";
+import { TeeSize } from "@/entities/tee-size";
+import { Gender } from "@/entities/gender";
 
 interface OrderFormModalProps {
   handleBuyModal: (showModal: boolean) => void;
@@ -8,7 +12,7 @@ interface OrderFormModalProps {
 
 interface OrderFormData {
   address: string;
-  tShirtSize: string;
+  tShirtSize: TeeSize;
 }
 
 const OrderFormModal: React.FC<OrderFormModalProps> = ({
@@ -17,7 +21,7 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<OrderFormData>({
     address: "",
-    tShirtSize: "",
+    tShirtSize: TeeSize.MEDIUM,
   });
 
   const handleInputChange = (
@@ -30,9 +34,15 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    const user: User = {
+      address: formData.address,
+      tee_size: formData.tShirtSize,
+      gender: Gender.NON_SPECIFIED,
+    };
+    await addOrderInfo(user);
     handleBuyModal(true);
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/ui/header";
 import Hero from "@/components/ui/hero";
 import FeaturedProducts from "@/components/ui/featured-products";
@@ -10,8 +10,10 @@ import Newsletter from "@/components/ui/newsletter";
 import Footer from "@/components/ui/footer";
 import TestCodeModal from "@/components/ui/test-code-modal";
 import OrderFormModal from "@/components/ui/order-form-modal";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Home() {
+  const supabase = createClientComponentClient();
   const [darkMode, setDarkMode] = useState(false);
   const [showCodingTestModal, setShowCodingTestModal] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
