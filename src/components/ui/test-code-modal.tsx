@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useRef } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { CheckCircle, XCircle } from "lucide-react";
 
@@ -38,6 +39,7 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
   const [loose, setLoose] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const codeModalRef = useRef<any>();
 
   useEffect(() => {
     if (isCorrect !== null) {
@@ -46,7 +48,23 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [isCorrect]);
+    document.addEventListener("keydown", keyDownHandler, false);
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler, false);
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCorrect, codeModalRef]);
+
+  const handleClickOutside = (e: any) => {
+    if (
+      !codeModalRef ||
+      !codeModalRef.current ||
+      !codeModalRef.current.contains(e.target)
+    ) {
+      handleCodingTestModal(true);
+    }
+  };
 
   const handleAnswerClick = (answerIndex: number) => {
     setSelectedAnswer(answerIndex);
@@ -56,6 +74,15 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
       setScore(score + 1);
     } else {
       setLoose(true);
+    }
+  };
+
+  const keyDownHandler = (e: any) => {
+    if (e.repeat) return;
+
+    if (e.key === "Escape") {
+      e.preventDefault();
+      handleClose();
     }
   };
 
@@ -83,7 +110,10 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
   return (
     <div className="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50">
       <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg shadow-xl w-full max-w-md">
+        <div
+          className="bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg shadow-xl w-full max-w-md"
+          ref={codeModalRef}
+        >
           <SignedOut>
             <SignInButton>
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full transition duration-300 ease-in-out transform hover:scale-105">

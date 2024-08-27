@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "@/components/ui/header";
 import Hero from "@/components/ui/hero";
 import FeaturedProducts from "@/components/ui/featured-products";
@@ -45,7 +46,7 @@ export default function Home() {
       <Footer />
       {(showCodingTestModal || showBuyModal) && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+          <div>
             {showCodingTestModal && (
               <TestCodeModal
                 handleCodingTestModal={handleCodingTestModal}

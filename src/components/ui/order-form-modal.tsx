@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef, useState } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { addOrderInfo } from "@/app/actions/form-order";
 import { User } from "@/entities/user";
@@ -27,7 +28,36 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
     tShirtSize: TeeSize.MEDIUM,
     gender: Gender.NON_SPECIFIED,
   });
+  const orderModalRef = useRef<any>();
 
+  useEffect(() => {
+    document.addEventListener("keydown", keyDownHandler, false);
+    window.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler, false);
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [orderModalRef]);
+
+  const handleClickOutside = (e: any) => {
+    if (
+      !orderModalRef ||
+      !orderModalRef.current ||
+      !orderModalRef.current.contains(e.target)
+    ) {
+      handleBuyModal(true);
+    }
+  };
+
+  const keyDownHandler = (e: any) => {
+    if (e.repeat) return;
+
+    if (e.key === "Escape") {
+      e.preventDefault();
+      handleClose();
+    }
+  };
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -62,7 +92,10 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
   return (
     <div className="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50">
       <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
-        <div className="relative bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+        <div
+          className="relative bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
+          ref={orderModalRef}
+        >
           <SignedOut>
             <SignInButton>
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full transition duration-300 ease-in-out transform hover:scale-105">
