@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Header from "@/components/ui/header";
 import Hero from "@/components/ui/hero";
 import FeaturedProducts from "@/components/ui/featured-products";

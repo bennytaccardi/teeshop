@@ -5,6 +5,7 @@ import { addOrderInfo } from "@/app/actions/form-order";
 import { User } from "@/entities/user";
 import { TeeSize } from "@/entities/tee-size";
 import { Gender } from "@/entities/gender";
+import BuyButton from "./buy-button";
 
 interface OrderFormModalProps {
   handleBuyModal: (showModal: boolean) => void;
@@ -188,12 +189,12 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
                   <option value="N">Non specified</option>
                 </select>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 sm:px-5 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
-              >
-                Submit Order
-              </button>
+
+              <BuyButton
+                price="29,99"
+                description="nice tee"
+                priceId="price_1PsXkCKLUr3CgMrlPiwyIHZs"
+              ></BuyButton>
             </form>
           </SignedIn>
 
