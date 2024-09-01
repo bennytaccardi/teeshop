@@ -2,6 +2,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { CheckCircle, XCircle } from "lucide-react";
+import { upsertLogs } from "@/services/activity-logs-service";
+import { upsertActivityLogs } from "@/app/actions/create-activity-logs";
+import { ActivityLogsActionEnum } from "@/entities/enum/action.enum";
 
 interface TestCodeModalProps {
   handleCodingTestModal: (showModal: boolean) => void;
@@ -93,6 +96,7 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
     } else {
+      upsertActivityLogs(ActivityLogsActionEnum.COMPLETE_QUIZ);
       setShowScore(true);
     }
   };

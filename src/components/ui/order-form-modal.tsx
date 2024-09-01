@@ -141,8 +141,8 @@ const OrderFormModal: React.FC<OrderFormModalProps> = ({
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                  placeholder="123-456-7890"
+                  pattern="[0-9]{10}"
+                  placeholder="1234567890"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                 />
               </div>

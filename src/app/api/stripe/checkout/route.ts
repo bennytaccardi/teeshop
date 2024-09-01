@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
           },
         ],
         mode: "payment",
-        success_url: `${process.env.NEXT_BASE_URL}`,
-        cancel_url: `${process.env.NEXT_BASE_URL}`,
+        success_url: `/`,
+        cancel_url: `/`,
         metadata: {
           userId: loggedUser.id,
           priceId,
