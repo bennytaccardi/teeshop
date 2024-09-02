@@ -15,9 +15,16 @@ const BuyButton = ({ priceId, price, description }: props) => {
       return;
     }
     try {
-      const response = await axios.post("/api/stripe/checkout", {
-        priceId: priceId,
-      });
+      const response = await axios.post(
+        "/api/stripe/checkout",
+        { priceId: priceId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Add any other necessary headers
+          },
+        }
+      );
       const data = response.data;
       if (!data.ok) throw new Error("Something went wrong");
       await stripe.redirectToCheckout({
