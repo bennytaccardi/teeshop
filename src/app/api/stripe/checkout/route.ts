@@ -4,9 +4,11 @@ import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+
 export async function POST(req: NextRequest) {
   const loggedUser = await currentUser();
   if (!loggedUser) throw new Error("User not authenticated");
+  console.log("Hey");
   try {
     const data = await req.json();
     const { priceId } = data;
@@ -20,8 +22,8 @@ export async function POST(req: NextRequest) {
           },
         ],
         mode: "payment",
-        success_url: `/`,
-        cancel_url: `/`,
+        success_url: `${process.env.NEXT_BASE_URL}/billing`,
+        cancel_url: `${process.env.NEXT_BASE_URL}/billing`,
         metadata: {
           userId: loggedUser.id,
           priceId,
