@@ -1,5 +1,4 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   async headers() {
     return [
       {
@@ -7,10 +6,10 @@ const nextConfig = {
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "*" }, // replace this with your actual origin
+          { key: "Access-Control-Allow-Origin", value: "*" },
           {
             key: "Access-Control-Allow-Methods",
-            value: "GET,DELETE,PATCH,POST,PUT",
+            value: "GET,OPTIONS,PATCH,DELETE,POST,PUT",
           },
           {
             key: "Access-Control-Allow-Headers",
@@ -19,15 +18,6 @@ const nextConfig = {
           },
         ],
       },
-      {
-        // Apply to all routes
-        source: "/(.*)",
-        headers: [
-          { key: "Referrer-Policy", value: "origin-when-cross-origin" },
-        ],
-      },
     ];
   },
 };
-
-export default nextConfig;
