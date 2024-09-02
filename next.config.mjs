@@ -13,6 +13,10 @@ const nextConfig = {
             value: "GET,DELETE,PATCH,POST,PUT",
           },
           {
+            key: "Referrer-Policy",
+            value: "origin-when-cross-origin",
+          },
+          {
             key: "Access-Control-Allow-Headers",
             value:
               "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
