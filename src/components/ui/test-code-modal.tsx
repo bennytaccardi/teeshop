@@ -2,9 +2,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { CheckCircle, XCircle } from "lucide-react";
-import { upsertLogs } from "@/services/activity-logs-service";
 import { upsertActivityLogs } from "@/app/actions/create-activity-logs";
 import { ActivityLogsActionEnum } from "@/entities/enum/action.enum";
+import BuyButton from "./buy-button";
 
 interface TestCodeModalProps {
   handleCodingTestModal: (showModal: boolean) => void;
@@ -46,8 +46,8 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
 
   useEffect(() => {
     if (isCorrect !== null) {
-      const timer = setTimeout(() => {
-        moveToNextQuestion();
+      const timer = setTimeout(async () => {
+        await moveToNextQuestion();
       }, 1500);
       return () => clearTimeout(timer);
     }
@@ -58,6 +58,15 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
       window.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isCorrect, codeModalRef]);
+
+  useEffect(() => {
+    const fakeResult = async () => {
+      if (currentQuestion === 0) {
+        await upsertActivityLogs(ActivityLogsActionEnum.START_QUIZ);
+      }
+    };
+    fakeResult();
+  }, []);
 
   const handleClickOutside = (e: any) => {
     if (
@@ -89,14 +98,14 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
     }
   };
 
-  const moveToNextQuestion = () => {
+  const moveToNextQuestion = async () => {
     setSelectedAnswer(null);
     setIsCorrect(null);
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
     } else {
-      upsertActivityLogs(ActivityLogsActionEnum.COMPLETE_QUIZ);
+      await upsertActivityLogs(ActivityLogsActionEnum.COMPLETE_QUIZ);
       setShowScore(true);
     }
   };
@@ -146,6 +155,11 @@ const TestCodeModal: React.FC<TestCodeModalProps> = ({
                 >
                   Buy your tee
                 </button>
+                <BuyButton
+                  price="29,99"
+                  description="nice tee"
+                  priceId="price_1PsXkCKLUr3CgMrlPiwyIHZs"
+                ></BuyButton>
               </div>
             ) : (
               <div>

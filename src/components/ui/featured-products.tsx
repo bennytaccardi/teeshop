@@ -1,47 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { Product } from "@/entities/product";
+import { getActiveProducts } from "@/services/product-service";
 
 interface FeaturedProductProps {
   handleModal: (showModal: boolean) => void;
   showModal: boolean;
 }
 
-const products = [
-  {
-    name: "Syntax Tee",
-    description: "Wear your code on your sleeve.",
-    price: "$24.99",
-    image: "/tshirt1.jpg",
-    categoryQuiz: "python",
-  },
-  {
-    name: "Bracket Buddy",
-    description: "Never lose a bracket again.",
-    price: "$19.99",
-    image: "/tshirt2.jpg",
-    categoryQuiz: "python",
-  },
-  {
-    name: "Semicolon Swag",
-    description: "Punctuate your style.",
-    price: "$22.99",
-    image: "/tshirt3.jpg",
-    categoryQuiz: "python",
-  },
-  {
-    name: "Bit Bytes",
-    description: "Byte-sized fashion.",
-    price: "$18.99",
-    image: "/tshirt4.jpg",
-    categoryQuiz: "python",
-  },
-];
+// const products = [
+//   {
+//     name: "Syntax Tee",
+//     description: "Wear your code on your sleeve.",
+//     price: "$24.99",
+//     image: "/nodejstee.jpg",
+//     categoryQuiz: "python",
+//   },
+//   {
+//     name: "Bracket Buddy",
+//     description: "Never lose a bracket again.",
+//     price: "$19.99",
+//     image: "/bash.jpg",
+//     categoryQuiz: "python",
+//   },
+//   {
+//     name: "Semicolon Swag",
+//     description: "Punctuate your style.",
+//     price: "$22.99",
+//     image: "/tshirt3.jpg",
+//     categoryQuiz: "python",
+//   },
+//   {
+//     name: "Bit Bytes",
+//     description: "Byte-sized fashion.",
+//     price: "$18.99",
+//     image: "/tshirt4.jpg",
+//     categoryQuiz: "python",
+//   },
+// ];
 
 const FeaturedProducts: React.FC<FeaturedProductProps> = ({
   handleModal,
   showModal,
 }) => {
-  const handleClick = (categoryQuiz: string) => {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const fetchedProducts = await getActiveProducts();
+      setProducts(fetchedProducts ?? []);
+    };
+
+    fetchProducts();
+  }, []);
+  const handleClick = () => {
     handleModal(showModal);
   };
   return (
@@ -55,16 +67,16 @@ const FeaturedProducts: React.FC<FeaturedProductProps> = ({
             <div
               key={index}
               className="bg-muted p-4 rounded-md shadow-md hover:shadow-lg transition-shadow duration-300"
-              onClick={() => handleClick(product.categoryQuiz)}
+              onClick={() => handleClick()}
             >
               <Image
-                src="/placeholder.svg"
-                alt={product.name}
+                src={product.image_url ?? "/fallback.jpg"}
+                alt={product.title}
                 width={300}
                 height={200}
                 className="w-full h-48 object-cover rounded-md mb-4"
               />
-              <h3 className="text-lg font-bold mb-2">{product.name}</h3>
+              <h3 className="text-lg font-bold mb-2">{product.title}</h3>
               <p className="text-muted-foreground mb-4">
                 {product.description}
               </p>

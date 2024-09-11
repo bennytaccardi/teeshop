@@ -6,9 +6,9 @@ import { currentUser } from "@clerk/nextjs/server";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function POST(req: NextRequest) {
+  console.log("Ciao");
   const loggedUser = await currentUser();
   if (!loggedUser) throw new Error("User not authenticated");
-  console.log("Hey");
   try {
     const data = await req.json();
     const { priceId } = data;

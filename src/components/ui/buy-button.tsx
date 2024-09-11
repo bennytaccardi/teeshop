@@ -1,4 +1,6 @@
 "use client";
+import { upsertActivityLogs } from "@/app/actions/create-activity-logs";
+import { ActivityLogsActionEnum } from "@/entities/enum/action.enum";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 type props = {
@@ -21,12 +23,12 @@ const BuyButton = ({ priceId, price, description }: props) => {
         {
           headers: {
             "Content-Type": "application/json",
-            // Add any other necessary headers
           },
         }
       );
       const data = response.data;
       if (!data.ok) throw new Error("Something went wrong");
+      await upsertActivityLogs(ActivityLogsActionEnum.PAY_TEE);
       await stripe.redirectToCheckout({
         sessionId: data.result.id,
       });

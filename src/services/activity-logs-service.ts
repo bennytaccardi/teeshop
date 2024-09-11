@@ -9,36 +9,36 @@ export async function upsertLogs(
   userId: string,
   action: ActivityLogsActionEnum
 ): Promise<ActivityLogs[]> {
-  const existentActivityLogs = (
+  const existentActivityLogs: ActivityLogs[] | null = (
     await db.from("activity_logs").select().eq("uid", userId)
   ).data;
 
   let data: ActivityLogs[];
-  if (existentActivityLogs) {
+  if (existentActivityLogs?.length === 1) {
+    const activities: Activity[] = JSON.parse(
+      existentActivityLogs[0].activity
+    ) as Activity[];
+    activities.push(getProperActivity(action));
     data = (
       await db
         .from("activity_logs")
-        .upsert({
-          ...existentActivityLogs,
-          uid: userId,
-          activity: JSON.stringify(getProperActivity(action)),
+        .update({
+          activity: JSON.stringify(activities),
         })
+        .eq("uid", userId)
         .select()
     ).data as ActivityLogs[];
   } else {
-    console.log("Hey");
     data = (
       await db
         .from("activity_logs")
         .insert({
           uid: userId,
-          activity: JSON.stringify(getProperActivity(action)),
+          activity: JSON.stringify([getProperActivity(action)]),
         })
         .select()
     ).data as ActivityLogs[];
   }
-
-  console.log(data);
   return data as ActivityLogs[];
 }
 
@@ -48,11 +48,25 @@ function getProperActivity(action: ActivityLogsActionEnum): Activity {
       return {
         type: ActivityLogsActionEnum.COMPLETE_QUIZ,
         result: true,
+        when: new Date(),
+      };
+    case ActivityLogsActionEnum.START_QUIZ:
+      return {
+        type: ActivityLogsActionEnum.START_QUIZ,
+        result: true,
+        when: new Date(),
+      };
+    case ActivityLogsActionEnum.PAY_TEE:
+      return {
+        type: ActivityLogsActionEnum.PAY_TEE,
+        result: true,
+        when: new Date(),
       };
     default:
       return {
         type: ActivityLogsActionEnum.NOT_DEFINED,
         result: true,
+        when: new Date(),
       };
   }
 }

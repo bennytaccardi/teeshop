@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ handleDarkMode, darkMode }) => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const menuItems = ["Shop", "Features", "About", "Test Your Code"];
+  // const menuItems = ["Shop"];
 
   return (
     <header className="bg-muted">
@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ handleDarkMode, darkMode }) => {
           <nav className="hidden md:flex space-x-10">
             <NavigationMenu>
               <NavigationMenuList>
-                {menuItems.map((item) => (
+                {/* {menuItems.map((item) => (
                   <NavigationMenuItem key={item}>
                     <NavigationMenuLink
                       className="group inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ handleDarkMode, darkMode }) => {
                       {item}
                     </NavigationMenuLink>
                   </NavigationMenuItem>
-                ))}
+                ))} */}
               </NavigationMenuList>
             </NavigationMenu>
           </nav>
@@ -108,7 +108,7 @@ const Header: React.FC<HeaderProps> = ({ handleDarkMode, darkMode }) => {
               </div>
               <div className="mt-6">
                 <nav className="grid gap-y-8">
-                  {menuItems.map((item) => (
+                  {/* {menuItems.map((item) => (
                     <a
                       key={item} // Add the 'a' tag and 'key' prop here
                       href="#"
@@ -118,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ handleDarkMode, darkMode }) => {
                         {item}
                       </span>
                     </a>
-                  ))}
+                  ))} */}
                 </nav>
               </div>
             </div>

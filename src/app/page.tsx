@@ -5,9 +5,6 @@ import React, { useState } from "react";
 import Header from "@/components/ui/header";
 import Hero from "@/components/ui/hero";
 import FeaturedProducts from "@/components/ui/featured-products";
-import Features from "@/components/ui/features";
-import Testimonials from "@/components/ui/testimonials";
-import Newsletter from "@/components/ui/newsletter";
 import Footer from "@/components/ui/footer";
 import TestCodeModal from "@/components/ui/test-code-modal";
 import OrderFormModal from "@/components/ui/order-form-modal";
@@ -38,9 +35,9 @@ export default function Home() {
             handleModal={handleCodingTestModal}
             showModal={showCodingTestModal}
           />
-          <Features />
-          <Testimonials />
-          <Newsletter />
+          {/* <Features /> */}
+          {/* <Testimonials /> */}
+          {/* <Newsletter /> */}
         </div>
       </main>
       <Footer />
