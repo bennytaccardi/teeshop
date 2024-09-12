@@ -8,37 +8,6 @@ interface FeaturedProductProps {
   showModal: boolean;
 }
 
-// const products = [
-//   {
-//     name: "Syntax Tee",
-//     description: "Wear your code on your sleeve.",
-//     price: "$24.99",
-//     image: "/nodejstee.jpg",
-//     categoryQuiz: "python",
-//   },
-//   {
-//     name: "Bracket Buddy",
-//     description: "Never lose a bracket again.",
-//     price: "$19.99",
-//     image: "/bash.jpg",
-//     categoryQuiz: "python",
-//   },
-//   {
-//     name: "Semicolon Swag",
-//     description: "Punctuate your style.",
-//     price: "$22.99",
-//     image: "/tshirt3.jpg",
-//     categoryQuiz: "python",
-//   },
-//   {
-//     name: "Bit Bytes",
-//     description: "Byte-sized fashion.",
-//     price: "$18.99",
-//     image: "/tshirt4.jpg",
-//     categoryQuiz: "python",
-//   },
-// ];
-
 const FeaturedProducts: React.FC<FeaturedProductProps> = ({
   handleModal,
   showModal,

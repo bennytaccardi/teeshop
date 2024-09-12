@@ -1,25 +1,50 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/ui/header";
 import Hero from "@/components/ui/hero";
 import FeaturedProducts from "@/components/ui/featured-products";
 import Footer from "@/components/ui/footer";
 import TestCodeModal from "@/components/ui/test-code-modal";
 import OrderFormModal from "@/components/ui/order-form-modal";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
-  const supabase = createClientComponentClient();
+  const searchParams = useSearchParams();
   const [darkMode, setDarkMode] = useState(false);
   const [showCodingTestModal, setShowCodingTestModal] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
 
   const handleDarkMode = () => setDarkMode(!darkMode);
-  const handleCodingTestModal = (show: boolean) =>
+
+  const handleCodingTestModal = (show: boolean) => {
     setShowCodingTestModal(!show);
-  const handleBuyModal = (show: boolean) => setShowBuyModal(!show);
+  };
+
+  const handleBuyModal = (show: boolean) => {
+    setShowBuyModal(!show);
+    updateURL("buy");
+  };
+
+  const updateURL = (modalType: string | null) => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (modalType) {
+        url.searchParams.set("modal", modalType);
+      } else {
+        url.searchParams.delete("modal");
+      }
+      window.history.pushState({}, "", url);
+    }
+  };
+
+  useEffect(() => {
+    const modalParam = searchParams.get("modal");
+    if (modalParam === "buy") {
+      setShowBuyModal(true);
+    }
+  }, [searchParams]);
 
   return (
     <div
@@ -35,9 +60,6 @@ export default function Home() {
             handleModal={handleCodingTestModal}
             showModal={showCodingTestModal}
           />
-          {/* <Features /> */}
-          {/* <Testimonials /> */}
-          {/* <Newsletter /> */}
         </div>
       </main>
       <Footer />
